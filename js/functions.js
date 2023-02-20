@@ -34,5 +34,5 @@ const addSymbols = (str, strLength, addingStr) => {
 
 checkStringLength('blablabla', 8);
 isPalindrome('blaa lb');
-console.log(getNumbersFromString('ababab 2041'));
-console.log(addSymbols('q', 4, 'we'));
+getNumbersFromString('ababab 2041');
+addSymbols('q', 4, 'we');
