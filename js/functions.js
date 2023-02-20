@@ -1,44 +1,38 @@
-function checkStringLength(str, strLength) {
-  return str.length <= strLength;
-}
+const checkStringLength = (str, strLength) => str.length <= strLength;
 
-function checkPalindrome(str) {
-  let strToCheck = '';
+const isPalindrome = (str) => {
+  const strTrimed = str.replaceAll(' ', '');
+  const strToCheck = str.split('').reverse().join('');
 
-  str = str.replaceAll(' ', '');
+  return strTrimed === strToCheck;
+};
 
-  for (let i = str.length - 1; i >= 0; i--) {
-    strToCheck += str[i];
-  }
-
-  return str === strToCheck;
-}
-
-function getNumbersFromString(str) {
-  str = String(str);
+const getNumbersFromString = (str) => {
+  const checkingString = typeof str === 'number' ? String(str) : str;
 
   let number = '';
 
-  for (let i = 0; i < str.length; i++) {
-    if (Number(str[i]) || str[i] === '0') {
-      number += str[i];
+  for (const ch of checkingString) {
+    if (Number.isInteger(parseInt(ch, 10))) {
+      number += ch;
     }
   }
 
-  return Number(number);
-}
+  return parseInt(number, 10);
+};
 
-function addSymbols(str, strLength, addingStr) {
+const addSymbols = (str, strLength, addingStr) => {
+  let resultStr = str;
 
-  while (str.length < strLength) {
-    str = addingStr.slice(0, strLength - str.length) + str;
+  while (resultStr.length < strLength) {
+    resultStr = addingStr.slice(0, strLength - resultStr.length) + resultStr;
   }
 
-  return str;
-}
+  return resultStr;
+};
 
 
 checkStringLength('blablabla', 8);
-checkPalindrome('blaa lb');
-getNumbersFromString('ababab 2341');
-addSymbols('q', 4, 'we');
+isPalindrome('blaa lb');
+console.log(getNumbersFromString('ababab 2041'));
+console.log(addSymbols('q', 4, 'we'));
