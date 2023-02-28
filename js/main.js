@@ -50,21 +50,19 @@ const createRandomIdFromRangeGenerator = (min, max) => {
 
 const getRandomArrayElement = (elements) => elements[getRandomInteger(0, elements.length - 1)];
 
-const createPost = () => {
-  return {
-    id: createRandomIdFromRangeGenerator(MIN_POST_ID, MAX_POST_ID),
-    url: `photos/${getRandomInteger(MIN_AVATAR_ID, MAX_AVATAR_ID)}.jpg`,
-    description: getRandomArrayElement(DESCRIPTIONS),
-    likes: getRandomInteger(MIN_LIKES_COUNT, MAX_LIKES_COUNT),
-    comments: Array.from({length: getRandomInteger(MIN_COMMENTS_COUNT, MAX_COMMENTS_COUNT)}, createComment())
-  };
-};
+const createComment = () => ({
+  id: createRandomIdFromRangeGenerator(MIN_COMMENT_ID, MAX_COMMENT_ID),
+  avatar: `img/avatar-${createRandomIdFromRangeGenerator(MIN_AVATAR_ID, MAX_AVATAR_ID)}.svg`,
+  message: getRandomArrayElement(COMMENTS),
+  name: getRandomArrayElement(NAMES)
+});
 
-const createComment = () => {
-  return {
-    id: createRandomIdFromRangeGenerator(MIN_COMMENT_ID, MAX_COMMENT_ID),
-    avatar: `img/avatar-${createRandomIdFromRangeGenerator(MIN_AVATAR_ID, MAX_AVATAR_ID)}.svg`,
-    message: getRandomArrayElement(COMMENTS),
-    name: getRandomArrayElement(NAMES)
-  };
-};
+const createPost = () => ({
+  id: createRandomIdFromRangeGenerator(MIN_POST_ID, MAX_POST_ID),
+  url: `photos/${getRandomInteger(MIN_AVATAR_ID, MAX_AVATAR_ID)}.jpg`,
+  description: getRandomArrayElement(DESCRIPTIONS),
+  likes: getRandomInteger(MIN_LIKES_COUNT, MAX_LIKES_COUNT),
+  comments: Array.from({length: getRandomInteger(MIN_COMMENTS_COUNT, MAX_COMMENTS_COUNT)}, createComment())
+});
+
+const kekstagramPost = createPost();
