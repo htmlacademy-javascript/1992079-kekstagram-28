@@ -17,12 +17,6 @@ const MIN_POST_ID = 1;
 const MAX_POST_ID = 25;
 const MIN_COMMENT_ID = 1;
 const MAX_COMMENT_ID = 100;
-const MIN_COMMENTS_COUNT = 20;
-const MAX_COMMENTS_COUNT = 67;
-const MIN_AVATAR_ID = 1;
-const MAX_AVATAR_ID = 6;
-const MIN_LIKES_COUNT = 15;
-const MAX_LIKES_COUNT = 200;
 
 const getRandomInteger = (min, max) => {
   const lower = Math.ceil(Math.min(Math.abs(min), Math.abs(max)));
@@ -50,19 +44,24 @@ const createRandomIdFromRangeGenerator = (min, max) => {
 
 const getRandomArrayElement = (elements) => elements[getRandomInteger(0, elements.length - 1)];
 
-const createComment = () => ({
-  id: createRandomIdFromRangeGenerator(MIN_COMMENT_ID, MAX_COMMENT_ID),
-  avatar: `img/avatar-${createRandomIdFromRangeGenerator(MIN_AVATAR_ID, MAX_AVATAR_ID)}.svg`,
+const generateCommentId = createRandomIdFromRangeGenerator(MIN_COMMENT_ID, MAX_COMMENT_ID);
+const generatePostId = createRandomIdFromRangeGenerator(MIN_POST_ID, MAX_POST_ID);
+
+const createComment = (id = generateCommentId()) => ({
+  id, //createRandomIdFromRangeGenerator(MIN_COMMENT_ID, MAX_COMMENT_ID),
+  avatar: `img/avatar-${createRandomIdFromRangeGenerator(1, 6)}.svg`,
   message: getRandomArrayElement(COMMENTS),
   name: getRandomArrayElement(NAMES)
 });
 
-const createPost = () => ({
-  id: createRandomIdFromRangeGenerator(MIN_POST_ID, MAX_POST_ID),
-  url: `photos/${getRandomInteger(MIN_AVATAR_ID, MAX_AVATAR_ID)}.jpg`,
+const createPost = (id = generatePostId()) => ({
+  id, //createRandomIdFromRangeGenerator(MIN_POST_ID, MAX_POST_ID),
+  url: `photos/${getRandomInteger(MIN_POST_ID, MAX_POST_ID)}.jpg`,
   description: getRandomArrayElement(DESCRIPTIONS),
-  likes: getRandomInteger(MIN_LIKES_COUNT, MAX_LIKES_COUNT),
-  comments: Array.from({length: getRandomInteger(MIN_COMMENTS_COUNT, MAX_COMMENTS_COUNT)}, createComment())
+  likes: getRandomInteger(15, 200),
+  comments: Array.from({length: getRandomInteger(20, 67)}, createComment)
 });
 
-const kekstagramPost = createPost();
+const createSeveralPosts = (count) => Array.from({length: count}, createPost);
+
+let test = createSeveralPosts(25);
