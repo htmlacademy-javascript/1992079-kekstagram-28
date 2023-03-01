@@ -64,4 +64,4 @@ const createPost = (id = generatePostId()) => ({
 
 const createSeveralPosts = (count) => Array.from({length: count}, createPost);
 
-let test = createSeveralPosts(25);
+createSeveralPosts(25);
