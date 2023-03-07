@@ -13,10 +13,13 @@ const DESCRIPTIONS = ['Привет, мир! Этот день не был бы 
   'Я не злой, просто ты не нравишься мне!',
   'С некоторыми людьми даже молчать интересно.'];
 
-const MIN_POST_ID = 1;
-const MAX_POST_ID = 25;
-const MIN_COMMENT_ID = 1;
-const MAX_COMMENT_ID = 100;
+const POSTS_TO_CREATE = 25;
+const MIN_LIKES = 15;
+const MAX_LIKES = 200;
+const MIN_AVATAR_ID = 1;
+const MAX_AVATAR_ID = 6;
+const MIN_COMMENTS = 20;
+const MAX_COMMENTS = 67;
 
 const getRandomInteger = (min, max) => {
   const lower = Math.ceil(Math.min(Math.abs(min), Math.abs(max)));
@@ -26,42 +29,24 @@ const getRandomInteger = (min, max) => {
   return Math.floor(result);
 };
 
-const createRandomIdFromRangeGenerator = (min, max) => {
-  const previousValues = [];
-
-  return function () {
-    let currentValue = getRandomInteger(min, max);
-    if (previousValues.length >= (max - min + 1)) {
-      return null;
-    }
-    while (previousValues.includes(currentValue)) {
-      currentValue = getRandomInteger(min, max);
-    }
-    previousValues.push(currentValue);
-    return currentValue;
-  };
-};
-
 const getRandomArrayElement = (elements) => elements[getRandomInteger(0, elements.length - 1)];
 
-const generateCommentId = createRandomIdFromRangeGenerator(MIN_COMMENT_ID, MAX_COMMENT_ID);
-const generatePostId = createRandomIdFromRangeGenerator(MIN_POST_ID, MAX_POST_ID);
-
-const createComment = (id = generateCommentId()) => ({
-  id, //createRandomIdFromRangeGenerator(MIN_COMMENT_ID, MAX_COMMENT_ID),
-  avatar: `img/avatar-${createRandomIdFromRangeGenerator(1, 6)}.svg`,
+const createComment = (id) => ({
+  id,
+  avatar: `img/avatar-${getRandomInteger(MIN_AVATAR_ID, MAX_AVATAR_ID)}.svg`,
   message: getRandomArrayElement(COMMENTS),
   name: getRandomArrayElement(NAMES)
 });
 
-const createPost = (id = generatePostId()) => ({
-  id, //createRandomIdFromRangeGenerator(MIN_POST_ID, MAX_POST_ID),
-  url: `photos/${getRandomInteger(MIN_POST_ID, MAX_POST_ID)}.jpg`,
+const createPost = (id) => ({
+  id,
+  url: `photos/${id}.jpg`,
   description: getRandomArrayElement(DESCRIPTIONS),
-  likes: getRandomInteger(15, 200),
-  comments: Array.from({length: getRandomInteger(20, 67)}, createComment)
+  likes: getRandomInteger(MIN_LIKES, MAX_LIKES),
+  comments: Array.from({length: getRandomInteger(MIN_COMMENTS, MAX_COMMENTS)}, (v,i) => createComment(i))
 });
 
-const createSeveralPosts = (count) => Array.from({length: count}, createPost);
+const createSeveralPosts = (count) => Array.from({length: count}, (v, i) => createPost(i));
 
-createSeveralPosts(25);
+createSeveralPosts(POSTS_TO_CREATE);
+
