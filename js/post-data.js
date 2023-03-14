@@ -1,5 +1,5 @@
 
-import {getRandomArrayElement, getRandomInteger} from './util.js';
+import {getRandomArrayElement, getRandomInteger} from './utils.js';
 
 const COMMENTS = ['Всё отлично!',
   'В целом всё неплохо. Но не всё.',
@@ -38,4 +38,9 @@ export const createPost = (id) => ({
   comments: Array.from({length: getRandomInteger(MIN_COMMENTS, MAX_COMMENTS)}, (v,i) => createComment(i))
 });
 
+const POSTS_TO_CREATE = 25;
+
+const createSeveralPosts = (count) => Array.from({length: count}, (_, i) => createPost(i));
+
+createSeveralPosts(POSTS_TO_CREATE);
 

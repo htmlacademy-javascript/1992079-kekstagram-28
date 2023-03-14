@@ -1,3 +1,3 @@
-import './setup.js';
+import './post-data.js';
 
 
