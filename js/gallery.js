@@ -1,6 +1,6 @@
 import {posts} from './post-data.js';
 
-const renderIntoElement = document.querySelector('.pictures');
+const galleryElement = document.querySelector('.pictures');
 const pictureTemplate = document.querySelector('#picture').content.querySelector('.picture');
 
 const fragment = document.createDocumentFragment();
@@ -15,4 +15,4 @@ posts.forEach((prop) => {
   fragment.appendChild(element);
 });
 
-renderIntoElement.appendChild(fragment);
+galleryElement.appendChild(fragment);
