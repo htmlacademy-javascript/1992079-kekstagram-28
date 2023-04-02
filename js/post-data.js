@@ -40,7 +40,7 @@ export const createPost = (id) => ({
 
 const POSTS_TO_CREATE = 25;
 
-const createSeveralPosts = (count) => Array.from({length: count}, (_, i) => createPost(i));
+const createSeveralPosts = (count) => Array.from({length: count}, (_, i) => createPost(i + 1));
 
-createSeveralPosts(POSTS_TO_CREATE);
+export const posts = createSeveralPosts(POSTS_TO_CREATE);
 
