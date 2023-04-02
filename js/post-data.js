@@ -32,7 +32,7 @@ const createComment = (id) => ({
 
 export const createPost = (id) => ({
   id,
-  url: `photos/${id + 1}.jpg`,
+  url: `photos/${id}.jpg`,
   description: getRandomArrayElement(DESCRIPTIONS),
   likes: getRandomInteger(MIN_LIKES, MAX_LIKES),
   comments: Array.from({length: getRandomInteger(MIN_COMMENTS, MAX_COMMENTS)}, (v,i) => createComment(i))
@@ -40,7 +40,7 @@ export const createPost = (id) => ({
 
 const POSTS_TO_CREATE = 25;
 
-const createSeveralPosts = (count) => Array.from({length: count}, (_, i) => createPost(i));
+const createSeveralPosts = (count) => Array.from({length: count}, (_, i) => createPost(i + 1));
 
 export const posts = createSeveralPosts(POSTS_TO_CREATE);
 

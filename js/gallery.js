@@ -3,16 +3,25 @@ import {posts} from './post-data.js';
 const galleryElement = document.querySelector('.pictures');
 const pictureTemplate = document.querySelector('#picture').content.querySelector('.picture');
 
-const fragment = document.createDocumentFragment();
-
-posts.forEach((prop) => {
+const createPhoto = (prop) => {
   const element = pictureTemplate.cloneNode(true);
 
   element.querySelector('img').src = prop.url;
   element.querySelector('.picture__likes').textContent = prop.likes;
   element.querySelector('.picture__comments').textContent = prop.comments.length;
 
-  fragment.appendChild(element);
-});
+  return element;
+};
 
-galleryElement.appendChild(fragment);
+const createFragmentOfPhotos = (props) => {
+  const fragment = document.createDocumentFragment();
+
+  props.forEach((prop) => {
+    const element = createPhoto(prop);
+    fragment.appendChild(element);
+  });
+
+  galleryElement.appendChild(fragment);
+};
+
+createFragmentOfPhotos(posts);
