@@ -18,7 +18,7 @@ const createPhoto = (prop) => {
   return element;
 };
 
-const createFragmentOfPhotos = (props) => {
+const renderGallery = (props) => {
   const fragment = document.createDocumentFragment();
 
   props.forEach((prop) => {
@@ -29,4 +29,4 @@ const createFragmentOfPhotos = (props) => {
   galleryElement.appendChild(fragment);
 };
 
-createFragmentOfPhotos(posts);
+renderGallery(posts);
