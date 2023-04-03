@@ -1,4 +1,5 @@
 import {posts} from './post-data.js';
+import {showBigPicture} from './big-picture.js';
 
 const galleryElement = document.querySelector('.pictures');
 const pictureTemplate = document.querySelector('#picture').content.querySelector('.picture');
@@ -9,6 +10,10 @@ const createPhoto = (prop) => {
   element.querySelector('img').src = prop.url;
   element.querySelector('.picture__likes').textContent = prop.likes;
   element.querySelector('.picture__comments').textContent = prop.comments.length;
+
+  element.addEventListener('click', () => {
+    showBigPicture(prop);
+  });
 
   return element;
 };
