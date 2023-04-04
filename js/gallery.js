@@ -27,8 +27,10 @@ const renderGallery = (photos) => {
 };
 
 galleryElement.addEventListener('click', (evt) => {
-  if(posts[evt.target.closest('a').dataId]) {
-    showBigPicture(posts[evt.target.closest('a').dataId]);
+  if(evt.target.closest('a')) {
+    if(posts[evt.target.closest('a').dataId].id === (evt.target.closest('a').dataId + 1)) {
+      showBigPicture(posts[evt.target.closest('a').dataId]);
+    }
   }
 });
 
