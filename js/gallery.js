@@ -10,10 +10,7 @@ const createPhoto = (prop) => {
   element.querySelector('img').src = prop.url;
   element.querySelector('.picture__likes').textContent = prop.likes;
   element.querySelector('.picture__comments').textContent = prop.comments.length;
-
-  element.addEventListener('click', () => {
-    showBigPicture(prop);
-  });
+  element.id = prop.id - 1;
 
   return element;
 };
@@ -27,6 +24,10 @@ const renderGallery = (props) => {
   });
 
   galleryElement.appendChild(fragment);
+
+  galleryElement.addEventListener('click', (evt) => {
+    showBigPicture(props[evt.target.closest('a').id]);
+  });
 };
 
 renderGallery(posts);

@@ -1,5 +1,8 @@
 import { isEscapeKey } from './utils.js';
 
+const COMMENT_WIDTH = 35;
+const COMMENT_HEIGHT = 35;
+
 const bigPictureElement = document.querySelector('.big-picture');
 const bigPictureImg = bigPictureElement.querySelector('img');
 const bigPictureLikes = bigPictureElement.querySelector('.likes-count');
@@ -8,17 +11,17 @@ const bigPictureCommentsList = bigPictureElement.querySelector('.social__comment
 const bigPictureDescription = bigPictureElement.querySelector('.social__caption');
 const bigPictureCloseButton = bigPictureElement.querySelector('.big-picture__cancel');
 
-const closeBigPicture = () => {
+const onClose = () => {
   bigPictureElement.classList.add('hidden');
   document.body.classList.remove('modal-open');
-  bigPictureCloseButton.removeEventListener('click', closeBigPicture);
+  bigPictureCloseButton.removeEventListener('click', onClose);
   document.removeEventListener('keydown', onDocumentKeydown);
 };
 
 function onDocumentKeydown (evt) {
   if (isEscapeKey(evt.key)) {
     evt.preventDefault();
-    closeBigPicture();
+    onClose();
   }
 }
 
@@ -30,8 +33,8 @@ const createCommentElement = (comment) => {
   avatarElement.classList.add('social__picture');
   avatarElement.src = comment.avatar;
   avatarElement.alt = comment.avatar;
-  avatarElement.width = 35;
-  avatarElement.height = 35;
+  avatarElement.width = COMMENT_WIDTH;
+  avatarElement.height = COMMENT_HEIGHT;
 
   const messageElement = document.createElement('p');
   messageElement.classList.add('social__text');
@@ -64,7 +67,7 @@ const fillBigPictureElement = (post) => {
   bigPictureCommentsList.appendChild(createCommentsFragment(post.comments));
   bigPictureDescription.textContent = post.description;
 
-  bigPictureCloseButton.addEventListener('click', closeBigPicture);
+  bigPictureCloseButton.addEventListener('click', onClose);
   document.addEventListener('keydown', onDocumentKeydown);
 };
 
