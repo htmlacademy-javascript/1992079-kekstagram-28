@@ -11,6 +11,9 @@ const bigPictureCommentsList = bigPictureElement.querySelector('.social__comment
 const bigPictureDescription = bigPictureElement.querySelector('.social__caption');
 const bigPictureCloseButton = bigPictureElement.querySelector('.big-picture__cancel');
 
+bigPictureElement.querySelector('.social__comment-count').classList.add('hidden');
+bigPictureElement.querySelector('.comments-loader').classList.add('hidden');
+
 const onClose = () => {
   bigPictureElement.classList.add('hidden');
   document.body.classList.remove('modal-open');
@@ -74,8 +77,6 @@ const fillBigPictureElement = (post) => {
 export const showBigPicture = (post) => {
   fillBigPictureElement(post);
   bigPictureElement.classList.remove('hidden');
-  bigPictureElement.querySelector('.social__comment-count').classList.add('hidden');
-  bigPictureElement.querySelector('.comments-loader').classList.add('hidden');
   document.body.classList.add('modal-open');
 };
 
