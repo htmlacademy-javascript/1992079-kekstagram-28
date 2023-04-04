@@ -15,28 +15,55 @@ const closeBigPicture = () => {
   document.removeEventListener('keydown', onDocumentKeydown);
 };
 
-const onDocumentKeydown = (evt) => {
-  if (isEscapeKey(evt)) {
+function onDocumentKeydown (evt) {
+  if (isEscapeKey(evt.key)) {
     evt.preventDefault();
     closeBigPicture();
   }
+}
+
+const createCommentElement = (comment) => {
+  const commentElement = document.createElement('li');
+  commentElement.classList.add('social__comment');
+
+  const avatarElement = document.createElement('img');
+  avatarElement.classList.add('social__picture');
+  avatarElement.src = comment.avatar;
+  avatarElement.alt = comment.avatar;
+  avatarElement.width = 35;
+  avatarElement.height = 35;
+
+  const messageElement = document.createElement('p');
+  messageElement.classList.add('social__text');
+  messageElement.textContent = comment.message;
+
+  commentElement.appendChild(avatarElement);
+  commentElement.appendChild(messageElement);
+
+  return commentElement;
+};
+
+const createCommentsFragment = (comments) => {
+  const fragment = document.createDocumentFragment();
+
+  comments.forEach((comment) => {
+    fragment.appendChild(createCommentElement(comment));
+  });
+
+  return fragment;
 };
 
 const fillBigPictureElement = (post) => {
   bigPictureImg.src = post.url;
   bigPictureLikes.textContent = post.likes;
   bigPictureCommentsCount.textContent = post.comments.length;
-  post.comments.forEach((comment) => {
-    bigPictureCommentsList.innerHTML += `<li class="social__comment">
-    <img
-        class="social__picture"
-        src="${comment.avatar}"
-        alt="${comment.name}"
-        width="35" height="35">
-    <p class="social__text">${comment.message}</p>
-</li>`;
-  });
+  /*Необходимо зачищать контейнер с комментариями,
+   так как они накапливаются бесконечно при открытии
+   разных фото*/
+  bigPictureCommentsList.innerHTML = '';
+  bigPictureCommentsList.appendChild(createCommentsFragment(post.comments));
   bigPictureDescription.textContent = post.description;
+
   bigPictureCloseButton.addEventListener('click', closeBigPicture);
   document.addEventListener('keydown', onDocumentKeydown);
 };
