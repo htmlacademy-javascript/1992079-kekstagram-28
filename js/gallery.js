@@ -28,17 +28,15 @@ const renderGallery = (photos) => {
 
 galleryElement.addEventListener('click', (evt) => {
   const photoElement = evt.target.closest('a');
-  if(photoElement) {
-    let photo;
-    posts.forEach((post) => {
-      if(post.id === photoElement.dataId) {
-        photo = post;
-      }
-    });
 
-    if(photo) {
-      showBigPicture(photo);
-    }
+  if(!photoElement) {
+    return;
+  }
+
+  const photo = posts.find((element) => element.id === photoElement.dataId);
+
+  if(photo) {
+    showBigPicture(photo);
   }
 });
 

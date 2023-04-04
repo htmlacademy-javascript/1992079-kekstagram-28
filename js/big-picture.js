@@ -14,17 +14,17 @@ const bigPictureCloseButton = bigPictureElement.querySelector('.big-picture__can
 bigPictureElement.querySelector('.social__comment-count').classList.add('hidden');
 bigPictureElement.querySelector('.comments-loader').classList.add('hidden');
 
-const onClose = () => {
+const onBigPictureClose = () => {
   bigPictureElement.classList.add('hidden');
   document.body.classList.remove('modal-open');
-  bigPictureCloseButton.removeEventListener('click', onClose);
+  bigPictureCloseButton.removeEventListener('click', onBigPictureClose);
   document.removeEventListener('keydown', onDocumentKeydown);
 };
 
 function onDocumentKeydown (evt) {
   if (isEscapeKey(evt.key)) {
     evt.preventDefault();
-    onClose();
+    onBigPictureClose();
   }
 }
 
@@ -70,7 +70,7 @@ const fillBigPictureElement = (post) => {
   bigPictureCommentsList.appendChild(createCommentsFragment(post.comments));
   bigPictureDescription.textContent = post.description;
 
-  bigPictureCloseButton.addEventListener('click', onClose);
+  bigPictureCloseButton.addEventListener('click', onBigPictureClose);
   document.addEventListener('keydown', onDocumentKeydown);
 };
 
