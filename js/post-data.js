@@ -1,4 +1,3 @@
-
 import {getRandomArrayElement, getRandomInteger} from './utils.js';
 
 const COMMENTS = ['Всё отлично!',
