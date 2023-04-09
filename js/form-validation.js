@@ -46,9 +46,9 @@ function onDocumentKeydown (evt) {
 
 
 export const isTagsUnique = (array) => {
-  const set = Array.from(new Set(array));
+  const set = new Set(array);
 
-  if (set.length === array.length && set.size === array.size) {
+  if (set.size === array.length) {
     return true;
   }
 
