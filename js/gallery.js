@@ -29,13 +29,13 @@ const renderGallery = (photos) => {
 const onGalleryClick = (evt) => {
   const photoElement = evt.target.closest('a');
 
-  if(!photoElement) {
+  if (!photoElement) {
     return;
   }
 
   const photo = posts.find((element) => element.id === photoElement.dataId);
 
-  if(photo) {
+  if (photo) {
     showBigPicture(photo);
   }
 };

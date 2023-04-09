@@ -45,10 +45,10 @@ function onDocumentKeydown (evt) {
 }
 
 
-export const hasDuplicates = (array) => {
+export const isTagsUnique = (array) => {
   const set = Array.from(new Set(array));
 
-  if (set.length === array.length) {
+  if (set.length === array.length && set.size === array.size) {
     return false;
   }
 
@@ -56,12 +56,13 @@ export const hasDuplicates = (array) => {
 };
 
 const validateHashtags = (hashtagsList) => {
-  let hashtags = hashtagsList.trim();
+  const hashtagsString = hashtagsList.trim();
 
-  if (hashtags.length) {
-    hashtags = hashtagsList.trim().split(' ').map((s) => s.toLowerCase());
+  if (!hashtagsString.length) {
+    return false;
   }
 
+  const hashtags = hashtagsString.split(' ').map((s) => s.toLowerCase());
 
   if (hashtags.length > MAX_HASHTAGS) {
     return false;
@@ -73,7 +74,7 @@ const validateHashtags = (hashtagsList) => {
     }
   }
 
-  if (hasDuplicates(hashtags)) {
+  if (isTagsUnique(hashtags)) {
     return false;
   }
 
@@ -91,9 +92,9 @@ const onUploadFormSubmit = (evt) => {
   if (!pristine.validate()) {
     return;
   }
+
   onUploadOverlayClose();
 };
 
 uploadButton.addEventListener('change', onUploadOverlayOpen);
-
 uploadOverlaySubmit.addEventListener('click', onUploadFormSubmit);
