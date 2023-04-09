@@ -38,7 +38,9 @@ function onUploadOverlayClose() {
 }
 
 function onDocumentKeydown (evt) {
-  if (isEscapeKey(evt.key) && uploadOverlayHashtags === document.activeElement && uploadOverlayImageDescription === document.activeElement) {
+  if (isEscapeKey(evt.key)
+  && uploadOverlayHashtags === document.activeElement
+  && uploadOverlayImageDescription === document.activeElement) {
     evt.preventDefault();
     onUploadOverlayClose();
   }
@@ -48,11 +50,7 @@ function onDocumentKeydown (evt) {
 export const isTagsUnique = (array) => {
   const set = new Set(array);
 
-  if (set.size === array.length) {
-    return true;
-  }
-
-  return false;
+  return set.size === array.length;
 };
 
 const validateHashtags = (hashtagsList) => {
