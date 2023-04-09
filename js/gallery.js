@@ -26,7 +26,7 @@ const renderGallery = (photos) => {
   galleryElement.appendChild(fragment);
 };
 
-const onPhotoClick = (evt) => {
+const onGalleryClick = (evt) => {
   const photoElement = evt.target.closest('a');
 
   if(!photoElement) {
@@ -40,6 +40,6 @@ const onPhotoClick = (evt) => {
   }
 };
 
-galleryElement.addEventListener('click', onPhotoClick);
+galleryElement.addEventListener('click', onGalleryClick);
 
 renderGallery(posts);

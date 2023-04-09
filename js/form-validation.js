@@ -1,4 +1,10 @@
-import { isEscapeKey, hasDuplicates } from './utils.js';
+import { isEscapeKey } from './utils.js';
+
+const REGEXP = /^#[a-zа-яё0-9]{1,19}$/i;
+const MAX_HASHTAGS = 5;
+const DESCRIPTION_MAX_LENGTH = 140;
+const HASTAG_ERROR = 'Некорректно введены хештеги';
+const DESCRIPTION_ERROR = `Описание не больше ${DESCRIPTION_MAX_LENGTH} символов`;
 
 const form = document.querySelector('#upload-select-image');
 
@@ -32,60 +38,59 @@ function onUploadOverlayClose() {
 }
 
 function onDocumentKeydown (evt) {
-  if (isEscapeKey(evt.key)) {
-    if(uploadOverlayHashtags === document.activeElement) {
-      return;
-    }
-
-    if(uploadOverlayImageDescription === document.activeElement) {
-      return;
-    }
-
+  if (isEscapeKey(evt.key) && uploadOverlayHashtags === document.activeElement && uploadOverlayImageDescription === document.activeElement) {
     evt.preventDefault();
     onUploadOverlayClose();
   }
 }
 
 
-const validateHashtags = (value) => {
-  const hashtags = value.split(' ').map((s) => s.toLowerCase());
-  const regexp = /^#[a-zа-яё0-9]{1,19}$/i;
+export const hasDuplicates = (array) => {
+  const set = Array.from(new Set(array));
 
-  let result = true;
-
-  if(hashtags[0] === '') {
-    return true;
-  }
-
-  if(hashtags.length > 5) {
+  if (set.length === array.length) {
     return false;
   }
 
-  hashtags.forEach((element) => {
-    if (!regexp.test(element)) {
-      result = false;
-    }
-  });
-
-  if(hasDuplicates(hashtags)) {
-    return false;
-  }
-
-  return result;
+  return true;
 };
 
-const validateDescription = (value) => value.length <= 140;
+const validateHashtags = (hashtagsList) => {
+  let hashtags = hashtagsList.trim();
 
-pristine.addValidator(uploadOverlayHashtags, validateHashtags, 'Некорректно введены хештеги');
-pristine.addValidator(uploadOverlayImageDescription, validateDescription, 'Описание не больше 140 символов');
+  if (hashtags.length) {
+    hashtags = hashtagsList.trim().split(' ').map((s) => s.toLowerCase());
+  }
+
+
+  if (hashtags.length > MAX_HASHTAGS) {
+    return false;
+  }
+
+  for (const hashtag of hashtags) {
+    if (!REGEXP.test(hashtag)) {
+      return false;
+    }
+  }
+
+  if (hasDuplicates(hashtags)) {
+    return false;
+  }
+
+  return true;
+};
+
+const validateDescription = (value) => value.length <= DESCRIPTION_MAX_LENGTH;
+
+pristine.addValidator(uploadOverlayHashtags, validateHashtags, HASTAG_ERROR);
+pristine.addValidator(uploadOverlayImageDescription, validateDescription, DESCRIPTION_ERROR);
 
 const onUploadFormSubmit = (evt) => {
   evt.preventDefault();
 
-  if(!pristine.validate()) {
+  if (!pristine.validate()) {
     return;
   }
-
   onUploadOverlayClose();
 };
 
