@@ -49,10 +49,10 @@ export const isTagsUnique = (array) => {
   const set = Array.from(new Set(array));
 
   if (set.length === array.length && set.size === array.size) {
-    return false;
+    return true;
   }
 
-  return true;
+  return false;
 };
 
 const validateHashtags = (hashtagsList) => {
@@ -74,7 +74,7 @@ const validateHashtags = (hashtagsList) => {
     }
   }
 
-  if (isTagsUnique(hashtags)) {
+  if (!isTagsUnique(hashtags)) {
     return false;
   }
 
