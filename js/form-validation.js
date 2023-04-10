@@ -6,10 +6,12 @@ const DESCRIPTION_MAX_LENGTH = 140;
 const HASTAG_ERROR = 'Некорректно введены хештеги';
 const DESCRIPTION_ERROR = `Описание не больше ${DESCRIPTION_MAX_LENGTH} символов`;
 
+//Получение формы как элемента
 const form = document.querySelector('#upload-select-image');
 
 const pristine = new Pristine(form, {}, false);
 
+//Получение элементов формы
 const uploadButton = form.querySelector('#upload-file');
 const uploadOverlay = form.querySelector('.img-upload__overlay');
 const uploadOverlayCloseButton = uploadOverlay.querySelector('#upload-cancel');
@@ -17,12 +19,28 @@ const uploadOverlayHashtags = uploadOverlay.querySelector('.text__hashtags');
 const uploadOverlayImageDescription = uploadOverlay.querySelector('.text__description');
 const uploadOverlaySubmit = uploadOverlay.querySelector('#upload-submit');
 
+//Переменные для изменения масштаба изображения
+const MAX_SCALE = 1;
+const MIN_SCALE = 0.25;
+const scaleStep = 0.25;
+
+const scaleControlBiggerButton = form.querySelector('.scale__control--bigger');
+const scaleControlSmallerButton = form.querySelector('.scale__control--smaller');
+const scaleControlValue = form.querySelector('.scale__control--value');
+const imagePreview = form.querySelector('.img-upload__preview');
+
+let currentScale;
+
+//Функции для обработчиков
 const onUploadOverlayOpen = () => {
   uploadOverlay.classList.remove('hidden');
   document.body.classList.add('modal-open');
 
   uploadOverlayCloseButton.addEventListener('click', onUploadOverlayClose);
   document.addEventListener('keydown', onDocumentKeydown);
+
+  currentScale = 1;
+  renderImage();
 };
 
 function onUploadOverlayClose() {
@@ -39,14 +57,14 @@ function onUploadOverlayClose() {
 
 function onDocumentKeydown (evt) {
   if (isEscapeKey(evt.key)
-  && uploadOverlayHashtags === document.activeElement
-  && uploadOverlayImageDescription === document.activeElement) {
+  && !(uploadOverlayHashtags === document.activeElement)
+  && !(uploadOverlayImageDescription === document.activeElement)) {
     evt.preventDefault();
     onUploadOverlayClose();
   }
 }
 
-
+//Валидация полей
 export const isTagsUnique = (array) => {
   const set = new Set(array);
 
@@ -94,5 +112,29 @@ const onUploadFormSubmit = (evt) => {
   onUploadOverlayClose();
 };
 
+//Добавление обработчиков
 uploadButton.addEventListener('change', onUploadOverlayOpen);
 uploadOverlaySubmit.addEventListener('click', onUploadFormSubmit);
+
+
+//Изменение масштаба изображения
+function renderImage() {
+  scaleControlValue.value = currentScale * 100 +'%';;
+  imagePreview.style.transform = `scale(${currentScale})`;
+}
+
+scaleControlBiggerButton.addEventListener('click', () => {
+  if (currentScale < MAX_SCALE) {
+    currentScale += scaleStep;
+    renderImage();
+  }
+});
+
+scaleControlSmallerButton.addEventListener('click', () => {
+  if (currentScale > MIN_SCALE) {
+    currentScale -= scaleStep;
+    renderImage();
+  }
+});
+
+//Фильтры
