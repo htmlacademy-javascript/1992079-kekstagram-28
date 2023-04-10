@@ -138,3 +138,19 @@ scaleControlSmallerButton.addEventListener('click', () => {
 });
 
 //Фильтры
+
+const effectsListElement = form.querySelector('.effects__list');
+const effects = {
+  none: 'effects__preview--none',
+  chrome: 'effects__preview--chrome',
+  sepia: 'effects__preview--sepia',
+  marvin: 'effects__preview--marvin',
+  phobos: 'effects__preview--phobos',
+  heat: 'effects__preview--heat'
+}
+
+effectsListElement.addEventListener('click', (evt) => {
+  if(evt.target.nodeName === 'INPUT') {
+    imagePreview.classList.add(effects[evt.target.value]);
+  }
+});
