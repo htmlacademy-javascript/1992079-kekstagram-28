@@ -112,14 +112,14 @@ const onUploadFormSubmit = (evt) => {
   onUploadOverlayClose();
 };
 
-//Добавление обработчиков
+//Добавление обработчиков формы
 uploadButton.addEventListener('change', onUploadOverlayOpen);
 uploadOverlaySubmit.addEventListener('click', onUploadFormSubmit);
 
 
 //Изменение масштаба изображения
 function renderImage() {
-  scaleControlValue.value = currentScale * 100 +'%';;
+  scaleControlValue.value = `${currentScale * 100}%`;
   imagePreview.style.transform = `scale(${currentScale})`;
 }
 
@@ -138,7 +138,6 @@ scaleControlSmallerButton.addEventListener('click', () => {
 });
 
 //Фильтры
-
 const effectsListElement = form.querySelector('.effects__list');
 const effects = {
   none: 'effects__preview--none',
@@ -147,10 +146,37 @@ const effects = {
   marvin: 'effects__preview--marvin',
   phobos: 'effects__preview--phobos',
   heat: 'effects__preview--heat'
-}
+};
+let currentEffect = 'effects__preview--none';
 
-effectsListElement.addEventListener('click', (evt) => {
-  if(evt.target.nodeName === 'INPUT') {
-    imagePreview.classList.add(effects[evt.target.value]);
+const onEffectClick = (evt) => {
+  if (evt.target.nodeName === 'INPUT') {
+    Object.values(effects).forEach((effect) => {
+      imagePreview.classList.remove(effect);
+    });
+    currentEffect = effects[evt.target.value];
+    imagePreview.classList.add(currentEffect);
   }
+};
+
+effectsListElement.addEventListener('click', onEffectClick);
+
+//Изменение интенсивности фильтров слайдером
+const sliderElement = form.querySelector('.effect-level__slider');
+const sliderValueElement = form.querySelector('.effect-level__value');
+
+sliderValueElement.value = 1;
+
+noUiSlider.create(sliderElement, {
+  range: {
+    min: 0,
+    max: 1,
+  },
+  start: 1,
+  step: 0.1,
+  connect: 'lower',
+});
+
+sliderElement.noUiSlider.on('update', () => {
+  sliderValueElement.value = sliderElement.noUiSlider.get();
 });
