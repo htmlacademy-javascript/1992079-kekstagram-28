@@ -70,7 +70,10 @@ getData()
       const elementsOnPage = galleryElement.querySelectorAll('a');
       elementsOnPage.forEach((element) => galleryElement.removeChild(element));
 
-      const newElements = Array.from({length: 10}, () => getRandomArrayElement(response));
+      const newElements = new Set();
+      while (newElements.size !== 10) {
+        newElements.add(getRandomArrayElement(response));
+      }
       renderGallery(newElements);
     });
     discussedFilter.addEventListener('click', () => {
