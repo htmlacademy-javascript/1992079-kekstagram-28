@@ -31,6 +31,23 @@ const imagePreview = form.querySelector('.img-upload__preview');
 
 let currentScale;
 
+//переменные для фильтров
+const sliderElement = form.querySelector('.effect-level__slider');
+const sliderValueElement = form.querySelector('.effect-level__value');
+
+sliderValueElement.value = 1;
+
+const effectsListElement = form.querySelector('.effects__list');
+const effects = {
+  none: 'effects__preview--none',
+  chrome: 'effects__preview--chrome',
+  sepia: 'effects__preview--sepia',
+  marvin: 'effects__preview--marvin',
+  phobos: 'effects__preview--phobos',
+  heat: 'effects__preview--heat'
+};
+let currentEffect = 'effects__preview--none';
+
 //Функции для обработчиков
 const onUploadOverlayOpen = () => {
   uploadOverlay.classList.remove('hidden');
@@ -53,6 +70,12 @@ function onUploadOverlayClose() {
   uploadButton.value = '';
   uploadOverlayHashtags.value = '';
   uploadOverlayImageDescription.value = '';
+  Object.values(effects).forEach((effect) => {
+    imagePreview.classList.remove(effect);
+  });
+  currentEffect = effects['none'];
+  imagePreview.classList.add(currentEffect);
+
 }
 
 function onDocumentKeydown (evt) {
@@ -138,16 +161,6 @@ scaleControlSmallerButton.addEventListener('click', () => {
 });
 
 //Фильтры
-const effectsListElement = form.querySelector('.effects__list');
-const effects = {
-  none: 'effects__preview--none',
-  chrome: 'effects__preview--chrome',
-  sepia: 'effects__preview--sepia',
-  marvin: 'effects__preview--marvin',
-  phobos: 'effects__preview--phobos',
-  heat: 'effects__preview--heat'
-};
-let currentEffect = 'effects__preview--none';
 
 const onEffectClick = (evt) => {
   if (evt.target.nodeName === 'INPUT') {
@@ -156,16 +169,83 @@ const onEffectClick = (evt) => {
     });
     currentEffect = effects[evt.target.value];
     imagePreview.classList.add(currentEffect);
+
+    if (currentEffect === 'effects__preview--none') {
+      sliderElement.noUiSlider.disable();
+      imagePreview.style['filter'] = '';
+    }
+    if (currentEffect === 'effects__preview--chrome') {
+      sliderElement.noUiSlider.enable();
+      sliderElement.noUiSlider.updateOptions({
+        range: {
+          min: 0,
+          max: 1,
+        },
+        start: 1,
+        step: 0.1,
+        connect: 'lower',
+      });
+      imagePreview.style['filter'] = `grayscale(${sliderElement.noUiSlider.get(true)})`;
+    }
+    if (currentEffect === 'effects__preview--sepia') {
+      sliderElement.noUiSlider.enable();
+      sliderElement.noUiSlider.updateOptions({
+        range: {
+          min: 0,
+          max: 1,
+        },
+        start: 1,
+        step: 0.1,
+        connect: 'lower',
+      });
+      imagePreview.style['filter'] = `sepia(${sliderElement.noUiSlider.get(true)})`;
+    }
+    if (currentEffect === 'effects__preview--marvin') {
+      sliderElement.noUiSlider.enable();
+      sliderElement.noUiSlider.updateOptions({
+        range: {
+          min: 0,
+          max: 1,
+        },
+        start: 1,
+        step: 0.1,
+        connect: 'lower',
+      });
+      imagePreview.style['filter'] = `invert(${sliderElement.noUiSlider.get(true) * 100}%)`;
+    }
+    if (currentEffect === 'effects__preview--phobos') {
+      sliderElement.noUiSlider.enable();
+      sliderElement.noUiSlider.updateOptions({
+        range: {
+          min: 0,
+          max: 3,
+        },
+        start: 3,
+        step: 0.1,
+        connect: 'lower',
+      });
+      imagePreview.style['filter'] = `blur(${sliderElement.noUiSlider.get()}px)`;
+    }
+    if (currentEffect === 'effects__preview--heat') {
+      sliderElement.noUiSlider.enable();
+      sliderElement.noUiSlider.updateOptions({
+        range: {
+          min: 1,
+          max: 3,
+        },
+        start: 3,
+        step: 0.1,
+        connect: 'lower',
+      });
+      imagePreview.style['filter'] = `brightness(${sliderElement.noUiSlider.get()})`;
+    }
   }
 };
 
 effectsListElement.addEventListener('click', onEffectClick);
 
 //Изменение интенсивности фильтров слайдером
-const sliderElement = form.querySelector('.effect-level__slider');
-const sliderValueElement = form.querySelector('.effect-level__value');
 
-sliderValueElement.value = 1;
 
 noUiSlider.create(sliderElement, {
   range: {
@@ -178,5 +258,24 @@ noUiSlider.create(sliderElement, {
 });
 
 sliderElement.noUiSlider.on('update', () => {
-  sliderValueElement.value = sliderElement.noUiSlider.get();
+  sliderValueElement.value = sliderElement.noUiSlider.get(true);
+
+  if (currentEffect === 'effects__preview--chrome') {
+    imagePreview.style['filter'] = `grayscale(${sliderElement.noUiSlider.get(true)})`;
+  }
+  if (currentEffect === 'effects__preview--sepia') {
+    imagePreview.style['filter'] = `sepia(${sliderElement.noUiSlider.get(true)})`;
+  }
+  if (currentEffect === 'effects__preview--marvin') {
+    imagePreview.style['filter'] = `invert(${sliderElement.noUiSlider.get(true)})`;
+  }
+  if (currentEffect === 'effects__preview--phobos') {
+    imagePreview.style['filter'] = `blur(${sliderElement.noUiSlider.get(true)})`;
+  }
+  if (currentEffect === 'effects__preview--heat') {
+    imagePreview.style['filter'] = `brightness(${sliderElement.noUiSlider.get(true)})`;
+  }
+  if (currentEffect === 'effects__preview--none') {
+    imagePreview.style['filter'] = '';
+  }
 });
