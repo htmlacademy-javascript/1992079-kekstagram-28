@@ -1,5 +1,7 @@
-import {posts} from './post-data.js';
+//import {posts} from './post-data.js';
 import {showBigPicture} from './big-picture.js';
+import { getData } from './api.js';
+import { showAlert } from './utils.js';
 
 const galleryElement = document.querySelector('.pictures');
 const pictureTemplate = document.querySelector('#picture').content.querySelector('.picture');
@@ -26,7 +28,7 @@ const renderGallery = (photos) => {
   galleryElement.appendChild(fragment);
 };
 
-const onGalleryClick = (evt) => {
+const onGalleryClick = (evt, posts) => {
   const photoElement = evt.target.closest('a');
 
   if (!photoElement) {
@@ -40,6 +42,9 @@ const onGalleryClick = (evt) => {
   }
 };
 
-galleryElement.addEventListener('click', onGalleryClick);
-
-renderGallery(posts);
+getData()
+  .then((response) => {
+    renderGallery(response);
+    galleryElement.addEventListener('click', (evt) => onGalleryClick(evt, response));
+  })
+  .catch((err) => showAlert(err.message));

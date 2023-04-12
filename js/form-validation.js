@@ -1,4 +1,5 @@
-import { isEscapeKey } from './utils.js';
+import { isEscapeKey, showAlert } from './utils.js';
+import { sendData } from './api.js';
 
 const REGEXP = /^#[a-zа-яё0-9]{1,19}$/i;
 const MAX_HASHTAGS = 5;
@@ -98,7 +99,7 @@ const validateHashtags = (hashtagsList) => {
   const hashtagsString = hashtagsList.trim();
 
   if (!hashtagsString.length) {
-    return false;
+    return true;
   }
 
   const hashtags = hashtagsString.split(' ').map((s) => s.toLowerCase());
@@ -128,11 +129,14 @@ pristine.addValidator(uploadOverlayImageDescription, validateDescription, DESCRI
 const onUploadFormSubmit = (evt) => {
   evt.preventDefault();
 
-  if (!pristine.validate()) {
-    return;
+  if (pristine.validate()) {
+    sendData(new FormData(form))
+      .then(onUploadOverlayClose)
+      .catch((err) => {
+        showAlert(err.message);
+      });
   }
 
-  onUploadOverlayClose();
 };
 
 //Добавление обработчиков формы
