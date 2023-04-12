@@ -30,6 +30,7 @@ const scaleControlSmallerButton = form.querySelector('.scale__control--smaller')
 const scaleControlValue = form.querySelector('.scale__control--value');
 const imagePreview = form.querySelector('.img-upload__preview');
 
+let currentFile;
 let currentScale;
 
 //переменные для фильтров
@@ -57,6 +58,8 @@ const onUploadOverlayOpen = () => {
   uploadOverlayCloseButton.addEventListener('click', onUploadOverlayClose);
   document.addEventListener('keydown', onDocumentKeydown);
 
+  currentFile = uploadButton.files[0];
+  imagePreview.querySelector('img').src = URL.createObjectURL(currentFile);
   currentScale = 1;
   renderImage();
 };
