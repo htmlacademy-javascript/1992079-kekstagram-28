@@ -1,4 +1,5 @@
-import { isEscapeKey } from './utils.js';
+import { isEscapeKey} from './utils.js';
+import { sendData } from './api.js';
 
 const REGEXP = /^#[a-zа-яё0-9]{1,19}$/i;
 const MAX_HASHTAGS = 5;
@@ -29,6 +30,7 @@ const scaleControlSmallerButton = form.querySelector('.scale__control--smaller')
 const scaleControlValue = form.querySelector('.scale__control--value');
 const imagePreview = form.querySelector('.img-upload__preview');
 
+let currentFile;
 let currentScale;
 
 //переменные для фильтров
@@ -56,6 +58,8 @@ const onUploadOverlayOpen = () => {
   uploadOverlayCloseButton.addEventListener('click', onUploadOverlayClose);
   document.addEventListener('keydown', onDocumentKeydown);
 
+  currentFile = uploadButton.files[0];
+  imagePreview.querySelector('img').src = URL.createObjectURL(currentFile);
   currentScale = 1;
   renderImage();
 };
@@ -98,7 +102,7 @@ const validateHashtags = (hashtagsList) => {
   const hashtagsString = hashtagsList.trim();
 
   if (!hashtagsString.length) {
-    return false;
+    return true;
   }
 
   const hashtags = hashtagsString.split(' ').map((s) => s.toLowerCase());
@@ -125,14 +129,59 @@ const validateDescription = (value) => value.length <= DESCRIPTION_MAX_LENGTH;
 pristine.addValidator(uploadOverlayHashtags, validateHashtags, HASTAG_ERROR);
 pristine.addValidator(uploadOverlayImageDescription, validateDescription, DESCRIPTION_ERROR);
 
+const messageTemplates = {
+  SUCCESS: document.querySelector('#success').content,
+  ERROR: document.querySelector('#error').content
+};
+
+const showMessage = (messageTemplate) => {
+  const element = messageTemplate.cloneNode(true);
+  const button = element.querySelector('button');
+
+
+  const removeMessage = () => {
+    // я не знаю почему но с одним удалением не работало(он удаляет что-то что даже в интсрументах разработчика не отображается)
+    // с удалением через передачу элемента(element) тоже не работало не представляю почему, просто выдавал ошибку что такого элемента в детях нет
+    document.body.removeChild(document.body.lastChild);
+    document.body.removeChild(document.body.lastChild);
+
+    button.removeEventListener('click', removeMessage);
+    document.removeEventListener('click', onDocumentClick);
+    document.removeEventListener('keydown', onDocumentEscKeydown);
+  };
+
+  function onDocumentClick (evt) {
+    if (evt.target !== element) {
+      removeMessage();
+    }
+  }
+
+  function onDocumentEscKeydown (evt) {
+    if (isEscapeKey(evt.key)) {
+      evt.preventDefault();
+      removeMessage();
+    }
+  }
+
+  button.addEventListener('click', removeMessage);
+  document.addEventListener('click', onDocumentClick);
+  document.addEventListener('keydown', onDocumentEscKeydown);
+
+  document.body.appendChild(element);
+};
+
 const onUploadFormSubmit = (evt) => {
   evt.preventDefault();
 
-  if (!pristine.validate()) {
-    return;
+  if (pristine.validate()) {
+    sendData(new FormData(form))
+      .then(onUploadOverlayClose)
+      .then(() => showMessage(messageTemplates.SUCCESS))
+      .catch(() => {
+        showMessage(messageTemplates.ERROR);
+      });
   }
 
-  onUploadOverlayClose();
 };
 
 //Добавление обработчиков формы
