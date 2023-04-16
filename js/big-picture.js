@@ -49,21 +49,22 @@ const createCommentElement = (comment) => {
 };
 
 const createCommentsFragment = (comments) => {
-  const COMMENTS_COUNT = 5;
+  const LOAD_COUNT = 5;
   let currentCommentsCount = 0;
 
   return () => {
     const fragment = document.createDocumentFragment();
 
-    for (let i = currentCommentsCount; i < COMMENTS_COUNT + currentCommentsCount; i++) {
-      if (comments[i]) {
-        fragment.appendChild(createCommentElement(comments[i]));
+    for (let i = 0; i < LOAD_COUNT; i++) {
+      if (comments[i + currentCommentsCount]) {
+        fragment.appendChild(createCommentElement(comments[i + currentCommentsCount]));
       } else {
-        currentCommentsCount -= (COMMENTS_COUNT - i);
+        currentCommentsCount -= (LOAD_COUNT - i);
+        bigPictureCommentsLoadButton.classList.add('hidden');
         break;
       }
     }
-    currentCommentsCount += COMMENTS_COUNT;
+    currentCommentsCount += LOAD_COUNT;
 
     bigPictureCommentsList.appendChild(fragment);
 
@@ -82,6 +83,7 @@ const fillBigPictureElement = (post) => {
   appendComments();
 
   bigPictureCommentsLoadButton.addEventListener('click', appendComments);
+  bigPictureCommentsLoadButton.classList.remove('hidden');
 
   bigPictureCloseButton.addEventListener('click', onBigPictureClose);
   document.addEventListener('keydown', onDocumentKeydown);
