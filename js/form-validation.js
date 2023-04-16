@@ -140,8 +140,6 @@ const showMessage = (messageTemplate) => {
 
 
   const removeMessage = () => {
-    // я не знаю почему но с одним удалением не работало(он удаляет что-то что даже в интсрументах разработчика не отображается)
-    // с удалением через передачу элемента(element) тоже не работало не представляю почему, просто выдавал ошибку что такого элемента в детях нет
     document.body.removeChild(document.body.lastChild);
     document.body.removeChild(document.body.lastChild);
 
@@ -219,74 +217,78 @@ const onEffectClick = (evt) => {
     currentEffect = effects[evt.target.value];
     imagePreview.classList.add(currentEffect);
 
-    if (currentEffect === 'effects__preview--none') {
-      sliderElement.noUiSlider.disable();
-      imagePreview.style['filter'] = '';
-    }
-    if (currentEffect === 'effects__preview--chrome') {
-      sliderElement.noUiSlider.enable();
-      sliderElement.noUiSlider.updateOptions({
-        range: {
-          min: 0,
-          max: 1,
-        },
-        start: 1,
-        step: 0.1,
-        connect: 'lower',
-      });
-      imagePreview.style['filter'] = `grayscale(${sliderElement.noUiSlider.get(true)})`;
-    }
-    if (currentEffect === 'effects__preview--sepia') {
-      sliderElement.noUiSlider.enable();
-      sliderElement.noUiSlider.updateOptions({
-        range: {
-          min: 0,
-          max: 1,
-        },
-        start: 1,
-        step: 0.1,
-        connect: 'lower',
-      });
-      imagePreview.style['filter'] = `sepia(${sliderElement.noUiSlider.get(true)})`;
-    }
-    if (currentEffect === 'effects__preview--marvin') {
-      sliderElement.noUiSlider.enable();
-      sliderElement.noUiSlider.updateOptions({
-        range: {
-          min: 0,
-          max: 1,
-        },
-        start: 1,
-        step: 0.1,
-        connect: 'lower',
-      });
-      imagePreview.style['filter'] = `invert(${sliderElement.noUiSlider.get(true) * 100}%)`;
-    }
-    if (currentEffect === 'effects__preview--phobos') {
-      sliderElement.noUiSlider.enable();
-      sliderElement.noUiSlider.updateOptions({
-        range: {
-          min: 0,
-          max: 3,
-        },
-        start: 3,
-        step: 0.1,
-        connect: 'lower',
-      });
-      imagePreview.style['filter'] = `blur(${sliderElement.noUiSlider.get()}px)`;
-    }
-    if (currentEffect === 'effects__preview--heat') {
-      sliderElement.noUiSlider.enable();
-      sliderElement.noUiSlider.updateOptions({
-        range: {
-          min: 1,
-          max: 3,
-        },
-        start: 3,
-        step: 0.1,
-        connect: 'lower',
-      });
-      imagePreview.style['filter'] = `brightness(${sliderElement.noUiSlider.get()})`;
+    switch(currentEffect){
+      case 'effects__preview--none':
+        imagePreview.style['filter'] = '';
+        break;
+
+      case 'effects__preview--chrome':
+        sliderElement.noUiSlider.updateOptions({
+          range: {
+            min: 0,
+            max: 1,
+          },
+          start: 1,
+          step: 0.1,
+          connect: 'lower',
+        });
+        imagePreview.style['filter'] = `grayscale(${sliderElement.noUiSlider.get(true)})`;
+        break;
+
+      case 'effects__preview--sepia':
+        sliderElement.noUiSlider.updateOptions({
+          range: {
+            min: 0,
+            max: 1,
+          },
+          start: 1,
+          step: 0.1,
+          connect: 'lower',
+        });
+        imagePreview.style['filter'] = `sepia(${sliderElement.noUiSlider.get(true)})`;
+        break;
+
+      case 'effects__preview--marvin':
+        sliderElement.noUiSlider.updateOptions({
+          range: {
+            min: 0,
+            max: 1,
+          },
+          start: 1,
+          step: 0.1,
+          connect: 'lower',
+        });
+        imagePreview.style['filter'] = `invert(${sliderElement.noUiSlider.get(true) * 100}%)`;
+        break;
+
+      case 'effects__preview--phobos':
+        sliderElement.noUiSlider.updateOptions({
+          range: {
+            min: 0,
+            max: 3,
+          },
+          start: 3,
+          step: 0.1,
+          connect: 'lower',
+        });
+        imagePreview.style['filter'] = `blur(${sliderElement.noUiSlider.get()}px)`;
+        break;
+
+      case 'effects__preview--heat':
+        sliderElement.noUiSlider.updateOptions({
+          range: {
+            min: 1,
+            max: 3,
+          },
+          start: 3,
+          step: 0.1,
+          connect: 'lower',
+        });
+        imagePreview.style['filter'] = `brightness(${sliderElement.noUiSlider.get()})`;
+        break;
+
+      default:
+        break;
     }
   }
 };
@@ -309,22 +311,32 @@ noUiSlider.create(sliderElement, {
 sliderElement.noUiSlider.on('update', () => {
   sliderValueElement.value = sliderElement.noUiSlider.get(true);
 
-  if (currentEffect === 'effects__preview--chrome') {
-    imagePreview.style['filter'] = `grayscale(${sliderElement.noUiSlider.get(true)})`;
-  }
-  if (currentEffect === 'effects__preview--sepia') {
-    imagePreview.style['filter'] = `sepia(${sliderElement.noUiSlider.get(true)})`;
-  }
-  if (currentEffect === 'effects__preview--marvin') {
-    imagePreview.style['filter'] = `invert(${sliderElement.noUiSlider.get(true)})`;
-  }
-  if (currentEffect === 'effects__preview--phobos') {
-    imagePreview.style['filter'] = `blur(${sliderElement.noUiSlider.get(true)})`;
-  }
-  if (currentEffect === 'effects__preview--heat') {
-    imagePreview.style['filter'] = `brightness(${sliderElement.noUiSlider.get(true)})`;
-  }
-  if (currentEffect === 'effects__preview--none') {
-    imagePreview.style['filter'] = '';
+  switch (currentEffect) {
+    case 'effects__preview--chrome':
+      imagePreview.style['filter'] = `grayscale(${sliderElement.noUiSlider.get(true)})`;
+      break;
+
+    case 'effects__preview--sepia':
+      imagePreview.style['filter'] = `sepia(${sliderElement.noUiSlider.get(true)})`;
+      break;
+
+    case 'effects__preview--marvin':
+      imagePreview.style['filter'] = `invert(${sliderElement.noUiSlider.get(true)})`;
+      break;
+
+    case 'effects__preview--phobos':
+      imagePreview.style['filter'] = `blur(${sliderElement.noUiSlider.get(true)})`;
+      break;
+
+    case 'effects__preview--heat':
+      imagePreview.style['filter'] = `brightness(${sliderElement.noUiSlider.get(true)})`;
+      break;
+
+    case 'effects__preview--none':
+      imagePreview.style['filter'] = '';
+      break;
+
+    default:
+      break;
   }
 });
