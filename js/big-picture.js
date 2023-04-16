@@ -6,13 +6,12 @@ const COMMENT_HEIGHT = 35;
 const bigPictureElement = document.querySelector('.big-picture');
 const bigPictureImg = bigPictureElement.querySelector('img');
 const bigPictureLikes = bigPictureElement.querySelector('.likes-count');
+const bigPictureCurrentCommentsCount = bigPictureElement.querySelector('.loaded-comments-count');
 const bigPictureCommentsCount = bigPictureElement.querySelector('.comments-count');
 const bigPictureCommentsList = bigPictureElement.querySelector('.social__comments');
+const bigPictureCommentsLoadButton = bigPictureElement.querySelector('.comments-loader');
 const bigPictureDescription = bigPictureElement.querySelector('.social__caption');
 const bigPictureCloseButton = bigPictureElement.querySelector('.big-picture__cancel');
-
-bigPictureElement.querySelector('.social__comment-count').classList.add('hidden');
-bigPictureElement.querySelector('.comments-loader').classList.add('hidden');
 
 const onBigPictureClose = () => {
   bigPictureElement.classList.add('hidden');
@@ -50,25 +49,39 @@ const createCommentElement = (comment) => {
 };
 
 const createCommentsFragment = (comments) => {
-  const fragment = document.createDocumentFragment();
+  const COMMENTS_COUNT = 5;
+  let currentCommentsCount = 0;
 
-  comments.forEach((comment) => {
-    fragment.appendChild(createCommentElement(comment));
-  });
+  return () => {
+    const fragment = document.createDocumentFragment();
 
-  return fragment;
+    for (let i = currentCommentsCount; i < COMMENTS_COUNT + currentCommentsCount; i++) {
+      if (comments[i]) {
+        fragment.appendChild(createCommentElement(comments[i]));
+      } else {
+        currentCommentsCount -= (COMMENTS_COUNT - i);
+        break;
+      }
+    }
+    currentCommentsCount += COMMENTS_COUNT;
+
+    bigPictureCommentsList.appendChild(fragment);
+
+    bigPictureCurrentCommentsCount.textContent = currentCommentsCount;
+  };
 };
 
 const fillBigPictureElement = (post) => {
   bigPictureImg.src = post.url;
   bigPictureLikes.textContent = post.likes;
   bigPictureCommentsCount.textContent = post.comments.length;
-  /*Необходимо зачищать контейнер с комментариями,
-   так как они накапливаются бесконечно при открытии
-   разных фото*/
   bigPictureCommentsList.innerHTML = '';
-  bigPictureCommentsList.appendChild(createCommentsFragment(post.comments));
   bigPictureDescription.textContent = post.description;
+
+  const appendComments = createCommentsFragment(post.comments);
+  appendComments();
+
+  bigPictureCommentsLoadButton.addEventListener('click', appendComments);
 
   bigPictureCloseButton.addEventListener('click', onBigPictureClose);
   document.addEventListener('keydown', onDocumentKeydown);

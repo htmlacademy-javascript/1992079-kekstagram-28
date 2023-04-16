@@ -1,4 +1,3 @@
-//import {posts} from './post-data.js';
 import {showBigPicture} from './big-picture.js';
 import { getData } from './api.js';
 import { showAlert, getRandomArrayElement } from './utils.js';
