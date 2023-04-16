@@ -10,7 +10,14 @@ const DESCRIPTION_ERROR = `Описание не больше ${DESCRIPTION_MAX_
 //Получение формы как элемента
 const form = document.querySelector('#upload-select-image');
 
-const pristine = new Pristine(form, {}, false);
+const pristine = new Pristine(form, {
+  classTo: 'img-upload__field-wrapper',
+  errorClass: 'form__item--invalid',
+  successClass: 'form__item--valid',
+  errorTextParent: 'img-upload__field-wrapper',
+  errorTextTag: 'div',
+  errorTextClass: 'form__error'
+});
 
 //Получение элементов формы
 const uploadButton = form.querySelector('#upload-file');
@@ -179,7 +186,6 @@ const onUploadFormSubmit = (evt) => {
         showMessage(messageTemplates.ERROR);
       });
   }
-
 };
 
 //Добавление обработчиков формы
